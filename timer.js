@@ -4,13 +4,14 @@ function buttonClicked() {
 	
 	
 	var startTimeMs = new Date().getTime();
-	var endTimeMs = startTimeMs + timerInterval;
-timerInterval =	document.getElementById("timerInterval").getAttribute("value");
-	stateObject = new StateObject();
+
+	var timerInterval = document.getElementById("timerInterval").getAttribute("value");
+		var endTimeMs = startTimeMs + timerInterval;
+var	stateObject = new AppState();
 	stateObject.timerInterval = timerInterval;
-	startObject.endTimeMs = endTimeMs;
-	const currentState = updateButtonLabel();
-	if (currentState === stateRunning) {
+	stateObject.endTimeMs = endTimeMs;
+	const currentState = updateButtonLabel(stateObject);
+	if (currentState === stateObject.runningState) {
 		cleartimerInterval();
 	} else {
 		var intervalId = setInterval(executeOnInterval, 1000, stateObject);
@@ -21,23 +22,28 @@ timerInterval =	document.getElementById("timerInterval").getAttribute("value");
 
 }
 
-function updateButtonLabel() {
+function updateButtonLabel(appState) {
 	const btnElement = document.getElementById("btnStartStop");
-	const currentBtnSate = btnElement.getAttribute("value");
-	if (currentBtnSate == stateRunning) {
-		btnElement.setAttribute("value", btnStateIdleLabel);
-		return btnStateIdleLabel;
+	const btnLabel = btnElement.getAttribute("value");
+	const currentState = btnElement.getAttribute("data-current-state");
+	appState.transitionState();
+	btnElement.setAttribute("value", appState.runningLabel);
+	return  appState.currentLabel;
+	// if (currentState == appState.runningState) {
+	// 	btnElement.setAttribute("value", appState.runningLabel);
+	// 	return  appState.runningLabel;
+	// }
+	// else {
+	// 	btnElement.setAttribute("value", appState.idleLabel);
+	// 	appState.transitionState();
+	// 	return appState.idleLabel;
+	// 	}
 	}
-	else {
-		btnElement.setAttribute("value", stateRunning);
-		return stateRunning;
-		}
-	}
 
 
 
 
-function executeOnInterval(stateObjecy) {
+function executeOnInterval(stateObject) {
 
 		var now = new Date().getTime();
 			var timeleft = stateObject.endTimeMs - now; 
@@ -66,7 +72,22 @@ function executeOnInterval(stateObjecy) {
 
 }
 
-export class AppState {
+class AppState {
+
+	constructor() {
+			 this.#runningLabel = 'Stop';
+	this.#runningState = 'running';
+	this.#idleLabel = 'Start';
+	this.#idleState = 'idle';
+	this.#currentState = this.#idleState;
+	
+	this.currentLabel = this.#idleLabel
+	}
+
+	get runningState() { return this.#runningState; }
+	get idleState() { return this.#idleState; }
+	get runningLabel() { return this.#runningLabel; }
+		get idleLabel() { return this.#idleLabel; }
 	timerInterval = 3600000; 
 	endTimeMs = 0;
 	#runningLabel;
@@ -76,15 +97,7 @@ export class AppState {
 	#currentState;
 	currentLabel;
 
-	constructor() {
-			 this.#runningLabel = 'Stop';
-	this.#runningState = 'running';
-	this.#idleLabel = 'Start';
-	this.#idleState = 'idle';
-	this.#currentState = this.#idleState;
 	
-		this.currentLabel = this.#btnStateIdleLabel
-	}
 
 	transitionState() {
 		if (this.currentState === this.#idleState) {
