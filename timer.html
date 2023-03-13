@@ -23,7 +23,8 @@
 <body>
     <div class="flex-container" id="timerContainer"></div>
     <div style="margin: 50px;">
-        <input type="number" id="timerInterval" value="360000" />
+        <label for="timerInterval">Interval in seconds</label>
+        <input type="number" id="timerInterval" value="300" />
     </div>
     <div style="margin: 50px;"> 
         <input type="button" value="Start" id="btnStartStop" data-current-state="idle" onclick="buttonClicked()" />
@@ -34,7 +35,7 @@
         <div id="hours">00</div>
         <div id="minutes">00</div>
         <div id="seconds">00</div>
-        <div id="end"></div>
+        <div id="end" style="display: none;"></div>
     </div>
     <script src="timer.js"></script>  
 </body>

@@ -6,12 +6,22 @@ function buttonClicked() {
   var timerInterval = document
     .getElementById("timerInterval")
     .getAttribute("value");
+<
+  // convert to milliseconds
+  timerInterval = Number(timerInterval) * 1000;
+
   var endTimeMs = startTimeMs + timerInterval;
   var stateObject = new AppState();
   stateObject.timerInterval = timerInterval;
   stateObject.endTimeMs = endTimeMs;
+
+
+  hideEndDiv();
   const currentState = updateButtonLabel(stateObject);
   if (currentState === stateObject.idleState) {
+    showEndDiv();
+
+ 
     clearInterval();
   } else {
     var intervalId = setInterval(executeOnInterval, 1000, stateObject);
@@ -36,6 +46,19 @@ function updateButtonLabel(appState) {
   // 	return appState.idleLabel;
   // 	}
 }
+
+
+function showEndDiv() {
+  const showEndDiv = document.getElementById("end");
+  showEndDiv.innerText = "TIMER ENDED";
+  showEndDiv.style.display = "block";
+}
+
+function hideEndDiv() {
+  const showEndDiv = document.getElementById("end");
+  showEndDiv.style.display = "none";
+}
+
 
 function executeOnInterval(stateObject) {
   var now = new Date().getTime();
